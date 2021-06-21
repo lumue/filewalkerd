@@ -1,13 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.3"
+    id("org.springframework.boot") version "2.4.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.jetbrains.intellij") version "1.0"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
+
 }
 
-group = "io.github.lumue.filescanner"
+group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -20,30 +22,17 @@ extra["springBootAdminVersion"] = "2.3.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("org.springframework.boot:spring-boot-starter-integration")
-    implementation("org.springframework.boot:spring-boot-starter-jersey")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("de.codecentric:spring-boot-admin-starter-client")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("org.springframework.integration:spring-integration-http")
-    implementation("org.springframework.integration:spring-integration-mongodb")
-    implementation("org.springframework.integration:spring-integration-webflux")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.springframework.integration:spring-integration-test")
 
-    implementation("org.springframework.integration:spring-integration-core")
-    implementation("org.springframework.integration:spring-integration-event")
-    implementation("org.springframework.integration:spring-integration-file")
     // json serializer
     implementation("com.google.guava:guava:12.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4")
@@ -73,7 +62,7 @@ dependencies {
     implementation("javax.ws.rs:javax.ws.rs-api:2.1.1")
 
     //nfo
-    implementation("com.github.lumue:nfotools:1.10-RELEASE")
+    implementation("com.github.lumue:nfotools:1.11-RELEASE")
     implementation("com.github.lumue:infojsontools:master-SNAPSHOT")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4")
 
@@ -89,8 +78,10 @@ dependencies {
     implementation("org.aspectj:aspectjweaver:1.9.1")
 //
 //  //test
-    testImplementation("junit:junit:4.11")
-//
+    testImplementation(platform("org.junit:junit-bom:5.7.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
 }
 
 dependencyManagement {
