@@ -1,4 +1,4 @@
-package net.lumue.filewalkerd.discover;
+package net.lumue.filewalkerd.scanner;
 
 import java.io.File;
 import java.nio.file.Path;

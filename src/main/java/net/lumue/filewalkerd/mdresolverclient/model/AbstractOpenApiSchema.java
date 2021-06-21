@@ -13,10 +13,11 @@
 
 package net.lumue.filewalkerd.mdresolverclient.model;
 
-import java.util.Objects;
-import java.util.Map;
-import javax.ws.rs.core.GenericType;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import javax.ws.rs.core.GenericType;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Abstract class for oneOf,anyOf schemas defined in OpenAPI spec

@@ -1,18 +1,17 @@
 package net.lumue.filewalkerd.mdresolverclient.invoker;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.ext.ContextResolver;
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.ext.ContextResolver;
 
 @javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-01-17T07:23:04.322496+01:00[Europe/Berlin]")
 public class JSON implements ContextResolver<ObjectMapper> {

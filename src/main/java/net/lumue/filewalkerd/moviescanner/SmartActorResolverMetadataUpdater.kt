@@ -1,4 +1,4 @@
-package net.lumue.filewalkerd.metadata.nfo
+package net.lumue.filewalkerd.moviescanner
 
 import io.github.lumue.nfotools.Movie
 

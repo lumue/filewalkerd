@@ -1,13 +1,16 @@
-package net.lumue.filewalkerd.metadata.nfo;
+package net.lumue.filewalkerd.moviescanner;
 
-import net.lumue.filewalkerd.util.FileAttributeUtils;
 import io.github.lumue.infojson.DownloadMetadata;
 import io.github.lumue.infojson.DownloadMetadataStreamParser;
 import io.github.lumue.nfotools.Movie;
+import net.lumue.filewalkerd.util.FileAttributeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;

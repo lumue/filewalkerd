@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.github.lumue.nfotools.Movie
+import net.lumue.filewalkerd.moviescanner.NfoMovieMetadataUpdater
+import net.lumue.filewalkerd.moviescanner.MetadataSourceAccessError
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
@@ -14,7 +16,8 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 
-class MetaJsonMovieMetadataSource(val file:File) : NfoMovieMetadataUpdater {
+class MetaJsonMovieMetadataSource(val file:File) :
+    NfoMovieMetadataUpdater {
     val downloadPage: URL
     get(){
         val reader = LocationMetadataReader()

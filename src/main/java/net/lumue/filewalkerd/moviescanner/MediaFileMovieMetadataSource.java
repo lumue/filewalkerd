@@ -1,7 +1,7 @@
-package net.lumue.filewalkerd.metadata.nfo;
+package net.lumue.filewalkerd.moviescanner;
 
-import net.lumue.filewalkerd.util.FileAttributeUtils;
 import io.github.lumue.nfotools.Movie;
+import net.lumue.filewalkerd.util.FileAttributeUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;

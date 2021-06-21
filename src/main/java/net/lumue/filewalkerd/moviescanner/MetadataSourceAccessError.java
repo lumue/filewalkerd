@@ -1,6 +1,4 @@
-package net.lumue.filewalkerd.metadata.nfo;
-
-import java.io.IOException;
+package net.lumue.filewalkerd.moviescanner;
 
 public class MetadataSourceAccessError extends RuntimeException {
   public MetadataSourceAccessError(final String s, final Exception ioException) {

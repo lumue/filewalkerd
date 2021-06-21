@@ -1,11 +1,11 @@
-package net.lumue.filewalkerd.metadata.nfo;
+package net.lumue.filewalkerd.moviescanner;
 
+import io.github.lumue.nfotools.Movie;
 import net.lumue.filewalkerd.mdresolverclient.api.ResolveControllerApi;
 import net.lumue.filewalkerd.mdresolverclient.invoker.ApiClient;
 import net.lumue.filewalkerd.mdresolverclient.invoker.ApiException;
 import net.lumue.filewalkerd.mdresolverclient.invoker.Configuration;
 import net.lumue.filewalkerd.mdresolverclient.model.MovieMetadata;
-import io.github.lumue.nfotools.Movie;
 
 import java.net.URL;
 import java.time.Duration;

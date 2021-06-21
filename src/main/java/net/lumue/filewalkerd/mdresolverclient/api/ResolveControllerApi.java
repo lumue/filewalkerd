@@ -12,14 +12,13 @@
 
 package net.lumue.filewalkerd.mdresolverclient.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.lumue.filewalkerd.mdresolverclient.invoker.ApiClient;
 import net.lumue.filewalkerd.mdresolverclient.invoker.ApiException;
 import net.lumue.filewalkerd.mdresolverclient.invoker.ApiResponse;
 import net.lumue.filewalkerd.mdresolverclient.invoker.Pair;
 import net.lumue.filewalkerd.mdresolverclient.model.MovieMetadata;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +27,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.function.Consumer;
-
 import java.util.ArrayList;
-import java.util.StringJoiner;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.function.Consumer;
 
 @javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-01-17T07:23:04.322496+01:00[Europe/Berlin]")
 public class ResolveControllerApi {

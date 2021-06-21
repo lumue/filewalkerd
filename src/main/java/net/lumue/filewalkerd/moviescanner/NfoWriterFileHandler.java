@@ -1,11 +1,11 @@
-package net.lumue.filewalkerd.metadata.fileeventhandler;
+package net.lumue.filewalkerd.moviescanner;
 
-import net.lumue.filewalkerd.discover.FileHandler;
-import net.lumue.filewalkerd.metadata.nfo.*;
-import net.lumue.filewalkerd.util.FileNamingUtils;
 import io.github.lumue.nfotools.Movie;
 import io.github.lumue.nfotools.Movie.MovieBuilder;
 import io.github.lumue.nfotools.NfoMovieSerializer;
+import net.lumue.filewalkerd.metadata.nfo.MetaJsonMovieMetadataSource;
+import net.lumue.filewalkerd.scanner.FileHandler;
+import net.lumue.filewalkerd.util.FileNamingUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
