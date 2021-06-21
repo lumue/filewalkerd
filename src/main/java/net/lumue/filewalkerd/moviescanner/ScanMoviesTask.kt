@@ -1,9 +1,11 @@
 package net.lumue.filewalkerd.moviescanner
 
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
+@ExperimentalCoroutinesApi
 class ScanMoviesTask {
 
 

@@ -1,7 +1,7 @@
 package net.lumue.filewalkerd.moviescanner
 
-import io.github.lumue.woelkchen.media.import.ProcessFiles
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import net.lumue.filewalkerd.scanner.ProcessFiles
 import net.lumue.filewalkerd.util.FileNamingUtils
 import java.io.File
 
@@ -19,7 +19,7 @@ class CollectAndWriteMovieMetadataTask(
 )
 {
     fun execute(path:String) {
-        val processFiles :ProcessFiles =ProcessFiles(
+        val processFiles : ProcessFiles = ProcessFiles(
             fileFilter,
             handleFile = {f->fileHandler.handleFile(f)
         })

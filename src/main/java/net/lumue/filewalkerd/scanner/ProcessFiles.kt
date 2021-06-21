@@ -1,4 +1,4 @@
-package io.github.lumue.woelkchen.media.import
+package net.lumue.filewalkerd.scanner
 
 
 import kotlinx.coroutines.*
