@@ -12,13 +12,8 @@ import java.util.Set;
 public class FileNamingUtils {
 
 
-private final static Set<String> MOVIE_EXTENSIONS = new HashSet<>(Arrays.asList("flv", "mp4", "avi","mkv"));
+private final static Set<String> MOVIE_EXTENSIONS = new HashSet<>(Arrays.asList("flv", "mp4", "avi","mkv","m4v"));
 private final static Set<String> METADATA_EXTENSIONS = new HashSet<>(Arrays.asList("nfo", "info.json","meta.json"));
-
-public static boolean isVideoFileExtension(Path path) {
-	final String filename = path.toString();
-	return MOVIE_EXTENSIONS.contains(FilenameUtils.getExtension(filename).toLowerCase());
-}
 
 public static boolean isVideoFileExtension(File file) {
 	final String filename = file.getName();
@@ -27,23 +22,17 @@ public static boolean isVideoFileExtension(File file) {
 
 public static String getInfoJsonFilename(String filename) {
 	String baseName = FilenameUtils.getBaseName(filename);
-	String infoJsonFilename = FilenameUtils.getFullPath(filename) + baseName + ".info.json";
-	return infoJsonFilename;
+	return FilenameUtils.getFullPath(filename) + baseName + ".info.json";
 }
 
 public static String getNfoFilename(String filename) {
 	String baseName = FilenameUtils.getBaseName(filename);
-	String infoJsonFilename = FilenameUtils.getFullPath(filename) + baseName + ".nfo";
-	return infoJsonFilename;
+	return FilenameUtils.getFullPath(filename) + baseName + ".nfo";
 }
 
-public static boolean isMetadataFileExtension(String filename) {
-	return METADATA_EXTENSIONS.contains(FilenameUtils.getExtension(filename).toLowerCase());
-}
 
 public static String getMetaJsonFilename(String filename) {
 	String baseName = FilenameUtils.getBaseName(filename);
-	String infoJsonFilename = FilenameUtils.getFullPath(filename) + baseName + ".meta.json";
-	return infoJsonFilename;
+	return FilenameUtils.getFullPath(filename) + baseName + ".meta.json";
 }
 }

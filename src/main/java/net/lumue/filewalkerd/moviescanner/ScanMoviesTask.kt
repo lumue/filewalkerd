@@ -9,26 +9,20 @@ import kotlinx.coroutines.runBlocking
 class ScanMoviesTask {
 
 
-    val locations = listOf(
-        "/mnt/storagebox/neu",
-        "/mnt/vm-mediafiles/video/adult",
-        "/mnt/storagebox/video/adult",
-        "/mnt/nasbox/media/adult"
-    )
 
-    fun execute() {
+
+    fun execute(l:String) {
         runBlocking {
-            val task1: CollectAndWriteMovieMetadataTask = CollectAndWriteMovieMetadataTask()
-            val executions = mutableListOf<Deferred<Unit>>()
-            locations.forEach { l ->
-                executions.add(async { task1.execute(l) })
-            }
-            executions.forEach { e -> e.await() }
+            CollectAndWriteMovieMetadataTask().execute(l)
         }
     }
 
-    fun main(args: Array<String>) {
-        this.execute()
-    }
 
+}
+
+
+@Suppress("UNUSED_PARAMETER")
+@ExperimentalCoroutinesApi
+fun main(args: Array<String>) {
+    ScanMoviesTask().execute("/mnt/storagebox/neu")
 }

@@ -30,7 +30,7 @@ public class NfoWriterFileHandler implements FileHandler {
 
   private final SmartActorResolverMetadataUpdater smartActorResolverMetadataUpdater;
 
-  public NfoWriterFileHandler(final boolean overwriteExistingNfo) throws JAXBException {
+  public NfoWriterFileHandler(final boolean overwriteExistingNfo) {
     this.overwriteExistingNfo = overwriteExistingNfo;
     this.movieSerializer = new NfoMovieSerializer();
     smartActorResolverMetadataUpdater = new SmartActorResolverMetadataUpdater();
@@ -40,9 +40,6 @@ public class NfoWriterFileHandler implements FileHandler {
   public void handleFile(final File file) {
     try {
       String filename = file.toString();
-      String extension = FilenameUtils.getExtension(filename);
-
-
 
       if (FileNamingUtils.isVideoFileExtension(file)) {
 
@@ -62,8 +59,8 @@ public class NfoWriterFileHandler implements FileHandler {
             movieBuilder = createBuilderFromNfo(nfoLocation);
           }
           catch(MetadataSourceAccessError e){
-            LOGGER.error("could not load movie from nfo file "+nfoLocation.getAbsolutePath()+":",e);
-            return;
+            LOGGER.warn("could not load movie from nfo file "+nfoLocation.getAbsolutePath()+", starting fresh:",e);
+            movieBuilder=Movie.builder();
           }
         }
         else
@@ -134,43 +131,42 @@ public class NfoWriterFileHandler implements FileHandler {
 
   }
 
-  private MovieBuilder configureFromMediafile(final File file, final MovieBuilder movieBuilder)
-      throws IOException {
+  private void configureFromMediafile(final File file, final MovieBuilder movieBuilder) {
 
     if(!file.exists()) {
       LOGGER.warn("can no longer access " + file);
-      return movieBuilder;
+      return;
     }
 
     final MediaFileMovieMetadataSource mediaFileMovieMetadataSource=new MediaFileMovieMetadataSource(file);
-    return mediaFileMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
+    mediaFileMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
   }
 
-  private MovieBuilder configureFromInfoJson(File infoJsonPath, MovieBuilder movieBuilder) {
+  private void configureFromInfoJson(File infoJsonPath, MovieBuilder movieBuilder) {
 
     if(!infoJsonPath.exists()) {
       LOGGER.warn("no youtube-dl metadatafile found for " + infoJsonPath);
-      return movieBuilder;
+      return;
     }
 
     final InfoJsonMovieMetadataSource infoJsonMovieMetadataSource = new InfoJsonMovieMetadataSource(infoJsonPath);
     movieBuilder = infoJsonMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
     URL origin=infoJsonMovieMetadataSource.getDownloadPage();
     final OnlineMovieMetadataSource onlineMovieMetadataSource=new OnlineMovieMetadataSource(origin);
-    return onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
+    onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
   }
 
-  private MovieBuilder configureFromMetaJson(File metaJsonPath, MovieBuilder movieBuilder) {
+  private void configureFromMetaJson(File metaJsonPath, MovieBuilder movieBuilder) {
 
     if(!metaJsonPath.exists()) {
-       return movieBuilder;
+       return;
     }
 
     final MetaJsonMovieMetadataSource metaJsonMovieMetadataSource = new MetaJsonMovieMetadataSource(metaJsonPath);
     movieBuilder= metaJsonMovieMetadataSource.configureNfoMovieBuilder( movieBuilder);
     URL origin=metaJsonMovieMetadataSource.getDownloadPage();
     final OnlineMovieMetadataSource onlineMovieMetadataSource=new OnlineMovieMetadataSource(origin);
-    return onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
+    onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder);
 
   }
 
