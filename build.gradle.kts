@@ -1,17 +1,30 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
+
+
+
 plugins {
+    application
     id("java")
-    id("org.springframework.boot") version "2.4.7"
+    id("org.springframework.boot") version "2.5.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
-
 }
 
 group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
+
+application {
+    applicationName="filewalkerd"
+    mainClass.set("net.lumue.filewalkerd.FilewalkerdApplicationKt")
+}
+
+val springBootVersion: String get() = "2.5.4"
+val dockerHubPassword: String get() = "M9w8a+ET9u@+tA%"
+val dockerHubUser: String get() = "lumue"
 
 repositories {
     mavenCentral()
@@ -21,17 +34,19 @@ repositories {
 extra["springBootAdminVersion"] = "2.3.1"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-quartz")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-quartz:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("de.codecentric:spring-boot-admin-starter-client")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools:$springBootVersion")
 
     // json serializer
     implementation("com.google.guava:guava:12.0")
@@ -101,4 +116,18 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
+    docker {
+
+        imageName = "lumue/${application.applicationName}"
+        isPublish=true
+        publishRegistry {
+            username = dockerHubUser
+            password = dockerHubPassword
+            url = "http://registry.docker-hub.com/v2/"
+            email = "mueller.lutz@gmail.com"
+        }
+    }
 }
