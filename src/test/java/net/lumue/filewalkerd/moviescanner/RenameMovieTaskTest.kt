@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test
  * Created by lm on 23.04.16.
  */
 @ExperimentalCoroutinesApi
-class CollectAndWriteMovieMetadataTaskTest {
+class RenameMovieTaskTest {
 
     val locations = listOf("/mnt/truenas/media/porn/neu")
 
     @Test
     fun execute() {
         runBlocking {
-            val task1 = CollectAndWriteMovieMetadataTask()
+            val task1 = RenameMovieTask()
             val executions = mutableListOf<Deferred<Unit>>()
             locations.forEach { l ->
                 executions.add(async { task1.execute(l) })

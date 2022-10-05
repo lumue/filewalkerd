@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class ScanService {
-    fun startScan(path: String, fileHandlerId: String) : String {
+    fun startScan(path: String, fileHandlerId: String): String {
 
-    return ""
+        return ""
     }
 
 }

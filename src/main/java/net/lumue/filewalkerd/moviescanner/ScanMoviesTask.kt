@@ -1,22 +1,18 @@
 package net.lumue.filewalkerd.moviescanner
 
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
 @ExperimentalCoroutinesApi
-class ScanMoviesTask {
+class ScanMoviesTask(
+    val path: String
+) {
 
-
-
-
-    fun execute(l:String) {
+    fun execute() {
         runBlocking {
-            CollectAndWriteMovieMetadataTask().execute(l)
+            RenameMovieTask().execute(path)
         }
     }
-
 
 }
 
@@ -24,5 +20,5 @@ class ScanMoviesTask {
 @Suppress("UNUSED_PARAMETER")
 @ExperimentalCoroutinesApi
 fun main(args: Array<String>) {
-    ScanMoviesTask().execute("/mnt/storagebox/neu")
+    ScanMoviesTask("/mnt/storagebox/neu").execute()
 }

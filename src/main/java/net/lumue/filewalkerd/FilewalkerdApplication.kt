@@ -1,4 +1,3 @@
-
 package net.lumue.filewalkerd
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -8,5 +7,5 @@ import org.springframework.boot.runApplication
 class FilewalkerdApplication
 
 fun main(args: Array<String>) {
-   runApplication<FilewalkerdApplication>(*args)
+    runApplication<FilewalkerdApplication>(*args)
 }

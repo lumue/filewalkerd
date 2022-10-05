@@ -12,21 +12,18 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @ExperimentalCoroutinesApi
-class ScanController(@Autowired val scanService : ScanService) {
+class ScanController(@Autowired val scanService: ScanService) {
 
     @RequestMapping(
         path = ["/scan"],
         method = [RequestMethod.POST],
         produces = ["application/json; charset=utf-8"]
     )
-    fun handlePost(@RequestBody scanRequest:ScanRequest): ResponseEntity<String> {
+    fun handlePost(@RequestBody scanRequest: ScanRequest): ResponseEntity<String> {
         return ResponseEntity.ok(scanService.startScan(scanRequest.path, scanRequest.fileHandlerId))
     }
 
-    
-}
-
-class ScanRequest(val path:String,val fileHandlerId:String) {
-
 
 }
+
+class ScanRequest(val path: String, val fileHandlerId: String)

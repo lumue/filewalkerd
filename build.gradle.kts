@@ -1,9 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-
-
-
-
 plugins {
     application
     id("java")
@@ -78,7 +74,7 @@ dependencies {
 
     //nfo
     implementation("com.github.lumue:nfotools:1.11-RELEASE")
-    implementation("com.github.lumue:infojsontools:master-SNAPSHOT")
+    implementation("com.github.lumue:infojsontools:-SNAPSHOT")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4")
 
     //mdresolver
@@ -126,7 +122,7 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("
         publishRegistry {
             username = dockerHubUser
             password = dockerHubPassword
-            url = "http://registry.docker-hub.com/v2/"
+            url = "https://registry.docker-hub.com/v2/"
             email = "mueller.lutz@gmail.com"
         }
     }

@@ -1,11 +1,7 @@
-package net.lumue.filewalkerd.scanner;
+package net.lumue.filewalkerd.scanner
 
-import java.io.File;
-import java.nio.file.Path;
+import java.io.File
 
-public interface FileHandler {
-  void handleFile(File file);
-  default void handleFile(Path path){
-    handleFile(path.toFile());
-  }
+interface FileHandler {
+    fun handleFile(file: File)
 }

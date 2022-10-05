@@ -12,17 +12,18 @@ import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 class ProcessFiles(
-        private val fileFilter: (file: File) -> Boolean = { true },
-        private val handleFile: suspend (file: File) -> Any = {},
-        private val context: CoroutineContext = Executors.newFixedThreadPool(10).asCoroutineDispatcher()
+    private val fileFilter: (file: File) -> Boolean = { true },
+    private val handleFile: suspend (file: File) -> Any = {},
+    private val context: CoroutineContext = Executors.newFixedThreadPool(10).asCoroutineDispatcher()
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(ProcessFiles::class.java)
 
 
     operator fun invoke(
-            path: String,
-            consumerCount: Int = 20) {
+        path: String,
+        consumerCount: Int = 20
+    ) {
 
         val rootPath = File(path)
         if (!rootPath.exists() || !rootPath.isDirectory)
@@ -39,8 +40,9 @@ class ProcessFiles(
     }
 
     private fun CoroutineScope.launchFileConsumer(
-            producer: ReceiveChannel<File>,
-            handleFile: suspend (file: File) -> Any): Deferred<Unit> {
+        producer: ReceiveChannel<File>,
+        handleFile: suspend (file: File) -> Any
+    ): Deferred<Unit> {
 
         return this.async(context) {
             for (file in producer) {
@@ -60,11 +62,11 @@ class ProcessFiles(
     private fun CoroutineScope.launchFileListProducer(rootPath: File): ReceiveChannel<File> {
         return this.produce(context) {
             rootPath.walkBottomUp()
-                    .filter { fileFilter(it) }
-                    .forEach {
-                        logger.debug("selected $it for processing ")
-                        send(it)
-                    }
+                .filter { fileFilter(it) }
+                .forEach {
+                    logger.debug("selected $it for processing ")
+                    send(it)
+                }
             close()
         }
     }
