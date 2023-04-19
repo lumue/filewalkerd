@@ -46,10 +46,13 @@ class RenameToNormalizedFileNameFileHandler : FileHandler {
         getFullPath(originalNfoFilename) + movieMetadata.title
             .replace("Teil ", "Part ")
             .replace("Episode ", "Part ")
+            .replace("Vol. ", "Part ")
+            .replace("Volume ", "Part ")
+            .replace("Chapter ", "Part ")
             .replace("#", "")
             .replace("&", "+")
             .replace("´", "")
-            .replace("Chapter ", "Part ")
+            .replace("?"," ")
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(RenameToNormalizedFileNameFileHandler::class.java)

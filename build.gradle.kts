@@ -79,6 +79,10 @@ dependencies {
 
     //mdresolver
     //implementation ("com.github.lumue:mdresolver-client-lib:0.1-RELEASE")
+//
+//    implementation ("org.bytedeco:javacv:1.5.4")
+//    implementation ("org.bytedeco.javacpp-presets:opencv:4.3.0-1.5.4")
+
 
     implementation("commons-io:commons-io:2.4")
 

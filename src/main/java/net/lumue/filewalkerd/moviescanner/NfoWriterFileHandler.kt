@@ -9,7 +9,8 @@ import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileExists
 import net.lumue.filewalkerd.util.FileHelper.resolveInfoJsonPath
 import net.lumue.filewalkerd.util.FileHelper.resolveMetaJsonPath
 import net.lumue.filewalkerd.util.FileHelper.resolveNfoPath
-import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.FilenameUtils.getBaseName
+import org.apache.commons.io.FilenameUtils.getFullPath
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.time.ZoneOffset
@@ -53,7 +54,6 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
                 } else {
                     try {
                         configureFromInfoJson(infoJsonLocation, movieBuilder)
-                        //configureVideoFileFromMovie(movieBuilder.build(),file);
                         configureFromMetaJson(metaJsonLocation, movieBuilder)
                     } catch (e: MetadataSourceAccessError) {
                         LOGGER.warn("could not load additional metadata", e)
@@ -69,11 +69,11 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
 
     @Throws(JAXBException::class, IOException::class)
     private fun writeNfoFile(movie: Movie, mediaFileName: String) {
-        val nfoFilename = FilenameUtils.getFullPath(mediaFileName) + FilenameUtils.getBaseName(mediaFileName) + ".nfo"
-        val outputStream: OutputStream = FileOutputStream(nfoFilename)
+        val nfoFilename = getBaseName(mediaFileName) + ".nfo"
+        LOGGER.info("serializing metadata for \"${movie.title}\" to \"${nfoFilename}\"")
+        val outputStream: OutputStream = FileOutputStream(getFullPath(mediaFileName) + nfoFilename)
         movieSerializer.serialize(movie, outputStream)
         outputStream.close()
-        LOGGER.debug("$nfoFilename created")
     }
 
     private fun createBuilderFromNfo(file: File): MovieBuilder {
@@ -107,12 +107,12 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
     }
 
     private fun configureFromMetaJson(metaJsonPath: File, movieBuilder: MovieBuilder) {
-        var movieBuilder: MovieBuilder? = movieBuilder
+
         if (!metaJsonPath.exists()) {
             return
         }
         val metaJsonMovieMetadataSource = MetaJsonMovieMetadataSource(metaJsonPath)
-        movieBuilder = metaJsonMovieMetadataSource.configureNfoMovieBuilder(movieBuilder!!)
+        metaJsonMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)
         val origin = metaJsonMovieMetadataSource.downloadPage
         val onlineMovieMetadataSource = OnlineMovieMetadataSource(origin)
         onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)

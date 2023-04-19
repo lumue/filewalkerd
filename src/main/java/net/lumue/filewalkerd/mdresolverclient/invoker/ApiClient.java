@@ -173,9 +173,9 @@ public class ApiClient {
         host = baseURI.getHost();
         port = baseURI.getPort();
         basePath = baseURI.getRawPath();
-        builder.connectTimeout(Duration.ofMillis(5000));
+        builder.connectTimeout(Duration.ofMinutes(3));
         interceptor = null;
-        readTimeout = null;
+        readTimeout = Duration.ofMinutes(3);
         responseInterceptor = null;
     }
 
