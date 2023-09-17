@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     application
-    id("java")
+    java
     id("org.springframework.boot") version "3.1.3"
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
@@ -11,7 +11,14 @@ plugins {
 
 group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_20
+java{
+    toolchain{
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 
 application {
     applicationName="filewalkerd"
@@ -45,29 +52,29 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools:$springBootVersion")
 
     // json serializer
-    implementation("com.google.guava:guava:12.0")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.4")
+    implementation("com.google.guava:guava:32.1.2-jre")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.15.2")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.1")
 
 
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.2")
+    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
 
 
     //tika parser
-    implementation("org.apache.tika:tika-core:1.25")
-    implementation("org.apache.tika:tika-parsers:1.25")
+    implementation("org.apache.tika:tika-core:2.9.0")
+    implementation("org.apache.tika:tika-parsers:2.9.0")
 
     //mp4parser
     implementation ("org.mp4parser:isoparser:1.9.41")
 
     implementation("io.swagger:swagger-annotations:1.5.22")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.10.4")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.10.4")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.10.4")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     implementation("org.openapitools:jackson-databind-nullable:0.2.1")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation("javax.ws.rs:javax.ws.rs-api:2.1.1")
@@ -75,7 +82,7 @@ dependencies {
     //nfo
     implementation("com.github.lumue:nfotools:1.11-RELEASE")
     implementation("com.github.lumue:infojsontools:-SNAPSHOT")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.4")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
 
     //mdresolver
     //implementation ("com.github.lumue:mdresolver-client-lib:0.1-RELEASE")
@@ -84,7 +91,7 @@ dependencies {
 //    implementation ("org.bytedeco.javacpp-presets:opencv:4.3.0-1.5.4")
 
 
-    implementation("commons-io:commons-io:2.4")
+    implementation("commons-io:commons-io:2.13.0")
 
 //  logging
     implementation("org.slf4j:slf4j-api:1.7.18")
@@ -109,18 +116,22 @@ dependencyManagement {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "20"
+        freeCompilerArgs = listOf("-Xjsr305=strict ")
+        jvmTarget = "17"
     }
+}
+
+tasks.withType<JavaCompile>{
+    val compilerArgs = options.compilerArgs
+    compilerArgs.addAll(listOf("-Xlint:deprecation"))
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
     docker {
-
         imageName.set("lumue/${application.applicationName}")
         publish.set(true)
         publishRegistry {
