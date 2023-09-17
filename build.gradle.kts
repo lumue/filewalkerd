@@ -3,22 +3,22 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     id("java")
-    id("org.springframework.boot") version "2.5.4"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.spring") version "1.4.30"
+    id("org.springframework.boot") version "3.1.3"
+    id("io.spring.dependency-management") version "1.1.3"
+    kotlin("jvm") version "1.8.22"
+    kotlin("plugin.spring") version "1.8.22"
 }
 
 group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_20
 
 application {
     applicationName="filewalkerd"
     mainClass.set("net.lumue.filewalkerd.FilewalkerdApplicationKt")
 }
 
-val springBootVersion: String get() = "2.5.4"
+val springBootVersion: String get() = "3.1.3"
 val dockerHubPassword: String get() = "M9w8a+ET9u@+tA%"
 val dockerHubUser: String get() = "lumue"
 
@@ -110,7 +110,7 @@ dependencyManagement {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "20"
     }
 }
 
@@ -121,13 +121,13 @@ tasks.withType<Test> {
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
     docker {
 
-        imageName = "lumue/${application.applicationName}"
-        isPublish=true
+        imageName.set("lumue/${application.applicationName}")
+        publish.set(true)
         publishRegistry {
-            username = dockerHubUser
-            password = dockerHubPassword
-            url = "https://registry.docker-hub.com/v2/"
-            email = "mueller.lutz@gmail.com"
+            username.set(dockerHubUser)
+            password.set(dockerHubPassword)
+            url.set("https://registry.docker-hub.com/v2/")
+            email.set("mueller.lutz@gmail.com")
         }
     }
 }
