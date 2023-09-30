@@ -9,9 +9,11 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.*
 
 
 class MetaJsonMovieMetadataSource(val file: File) :
@@ -21,7 +23,7 @@ class MetaJsonMovieMetadataSource(val file: File) :
             val reader = LocationMetadataReader()
             return try {
                 val locationMetadata = reader.read(FileInputStream(file))
-                URL(locationMetadata.url)
+                URI.create(locationMetadata.url).toURL()
             } catch (e: FileNotFoundException) {
                 throw MetadataSourceAccessError("could not extract url", e)
             }
@@ -50,7 +52,7 @@ fun LocationMetadata.configureMovieBuilderWithLocationMetadata(movieBuilder: Mov
         .withRuntime(contentMetadata.duration.toMinutes().toString())
         .withTag(this.contentMetadata.hoster)
         .withTag(this.contentMetadata.uploaded?.year.toString())
-        .withTag(this.contentMetadata.uploaded?.month.toString().toLowerCase())
+        .withTag(this.contentMetadata.uploaded?.month.toString().lowercase(Locale.getDefault()))
         .withVotes(this.contentMetadata.votes.toString())
         .withTagline(this.contentMetadata.description)
 

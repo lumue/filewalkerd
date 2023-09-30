@@ -25,7 +25,7 @@ object FileHelper {
     @JvmStatic
     fun isVideoFileExtension(file: File): Boolean {
         val filename = file.name
-        return MOVIE_EXTENSIONS.contains(FilenameUtils.getExtension(filename).toLowerCase())
+        return MOVIE_EXTENSIONS.contains(FilenameUtils.getExtension(filename).lowercase(Locale.getDefault()))
     }
 
     fun getInfoJsonFilename(filename: String?): String {
@@ -57,6 +57,14 @@ object FileHelper {
     @JvmStatic
     fun nfoMetadataFileExists(filename: String?): Boolean {
         return Files.exists(Paths.get(getNfoFilename(filename)))
+    }
+
+    @JvmStatic
+    fun nfoMetadataFileModifiedAfter(filename: String?,reftime:Long ): Boolean{
+        val modifiedMillis = Files.getLastModifiedTime(Paths.get(getNfoFilename(filename))).toMillis()
+        return modifiedMillis>=reftime
+
+
     }
 
     @JvmStatic

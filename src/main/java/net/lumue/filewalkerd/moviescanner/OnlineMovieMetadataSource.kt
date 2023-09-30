@@ -21,7 +21,7 @@ class OnlineMovieMetadataSource(private val url: URL) : NfoMovieMetadataUpdater 
     init {
         apiClient = Configuration.getDefaultApiClient()
             .setBasePath("/")
-            .setReadTimeout(Duration.of(15, ChronoUnit.SECONDS))
+            .setReadTimeout(Duration.of(300, ChronoUnit.SECONDS))
     }
 
     override fun configureNfoMovieBuilder(movieBuilder: MovieBuilder): MovieBuilder {
@@ -52,19 +52,19 @@ class OnlineMovieMetadataSource(private val url: URL) : NfoMovieMetadataUpdater 
     }
 
     private val metadataFromURL: MovieMetadata
-        private get() {
+        get() {
             val apiInstance = ResolveControllerApi(apiClient)
             val httpURL: URL
+            var externalForm =""
             return try {
-                httpURL = URL("http", url.host, 80, url.file)
-                apiInstance.resolveMetadataforUrlInPath(httpURL.toExternalForm())
+                httpURL =  URL("http", url.host,80,url.file)
+                externalForm= httpURL.toExternalForm()
+                apiInstance.resolveMetadataforUrlInPath(externalForm)
             } catch (e: MalformedURLException) {
-                throw MetadataSourceAccessError("error transforming url", e)
+                throw RuntimeException("error transforming url", e)
             } catch (e: ApiException) {
-                val msg = "Exception when calling ResolveControllerApi#resolveMetadataforUrlInBody" +
-                        "Status code: " + e.code +
-                        "Reason: " + e.responseBody +
-                        "Response headers: " + e.responseHeaders
+                val msg =
+                    "Exception when calling metadata-resolver service with \n\turl: $externalForm \n\tStatus code: ${e.code}\n\tReason: ${e.responseBody}\n\tResponse headers: ${e.responseHeaders}"
                 throw MetadataSourceAccessError(msg, e)
             }
         }

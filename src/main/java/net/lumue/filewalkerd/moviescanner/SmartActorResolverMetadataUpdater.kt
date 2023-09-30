@@ -1,6 +1,7 @@
 package net.lumue.filewalkerd.moviescanner
 
 import io.github.lumue.nfotools.Movie
+import java.util.*
 
 class SmartActorResolverMetadataUpdater(
     private val knownActorSet: Set<String> = loadActors()
@@ -21,19 +22,19 @@ class SmartActorResolverMetadataUpdater(
 }
 
 private fun Set<String>.toNormalizedForm(): Set<String> {
-    return this.map { s -> s.toNormalizedForm() }.toHashSet()
+    return this.filter { s-> s!=null }.map { s -> s.toNormalizedForm() }.toHashSet()
 }
 
 private fun String.toNormalizedForm():String{
-    return this.toLowerCase()
-        .replace(" ","")
-        .replace("-","")
-        .replace("_","")
+    return this.lowercase(Locale.getDefault())
+        .replace(" ", "")
+        .replace("-", "")
+        .replace("_", "")
 
 }
 
 fun loadActors(): Set<String> {
     return SmartActorResolverMetadataUpdater::class.java.getResourceAsStream("actor.csv")!!.bufferedReader()
-        .readLines().toHashSet()
+        .readLines().filter { l->l!=null }.toHashSet()
 
 }

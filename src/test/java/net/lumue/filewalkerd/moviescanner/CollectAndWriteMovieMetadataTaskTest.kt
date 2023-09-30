@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test
 @ExperimentalCoroutinesApi
 class CollectAndWriteMovieMetadataTaskTest {
 
-    val locations = listOf("/mnt/truenas/media/porn/neu")
+    val locations = listOf("/mnt/truenas/media/porn/neu/2")
+    //,"/mnt/truenas/media/porn/adult/2023")
 
     @Test
     fun execute() {

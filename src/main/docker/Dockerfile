@@ -1,4 +1,4 @@
-FROM amazoncorretto:15
+FROM amazoncorretto:19
 MAINTAINER lm "mueller.lutz@gmail.com"
 
 ADD *.jar /app.jar

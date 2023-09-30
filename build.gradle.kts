@@ -5,18 +5,18 @@ plugins {
     java
     id("org.springframework.boot") version "3.1.3"
     id("io.spring.dependency-management") version "1.1.3"
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.spring") version "1.8.22"
+    kotlin("jvm") version "1.9.20-Beta2"
+    kotlin("plugin.spring") version "1.9.20-Beta2"
 }
 
 group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
 java{
     toolchain{
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 
@@ -94,7 +94,7 @@ dependencies {
     implementation("commons-io:commons-io:2.13.0")
 
 //  logging
-    implementation("org.slf4j:slf4j-api:1.7.18")
+    implementation("org.slf4j:slf4j-api:2.0.9")
 
 //   https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
     implementation("org.aspectj:aspectjweaver:1.9.1")
@@ -117,7 +117,7 @@ dependencyManagement {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict ")
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 }
 

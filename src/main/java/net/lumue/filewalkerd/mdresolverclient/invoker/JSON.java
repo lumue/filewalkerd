@@ -2,6 +2,7 @@ package net.lumue.filewalkerd.mdresolverclient.invoker;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 
@@ -13,23 +14,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-01-17T07:23:04.322496+01:00[Europe/Berlin]")
 public class JSON implements ContextResolver<ObjectMapper> {
     private ObjectMapper mapper;
 
     public JSON() {
-        mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.configure(MapperFeature.ALLOW_COERCION_OF_SCALARS, false);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-        mapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, true);
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-        mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-        mapper.setDateFormat(new RFC3339DateFormat());
-        mapper.registerModule(new JavaTimeModule());
-        JsonNullableModule jnm = new JsonNullableModule();
-        mapper.registerModule(jnm);
+        mapper = JsonMapper.builder()
+        .serializationInclusion(JsonInclude.Include.NON_NULL)
+        .disable(MapperFeature.ALLOW_COERCION_OF_SCALARS)
+        .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .enable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+        .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+                .build()
+                .setDateFormat(new RFC3339DateFormat())
+                .registerModule(new JavaTimeModule())
+                .registerModule(new JsonNullableModule());
     }
 
     /**

@@ -6,6 +6,7 @@ import io.github.lumue.nfotools.NfoMovieSerializer
 import net.lumue.filewalkerd.scanner.FileHandler
 import net.lumue.filewalkerd.util.FileHelper.isVideoFileExtension
 import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileExists
+import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileModifiedAfter
 import net.lumue.filewalkerd.util.FileHelper.resolveInfoJsonPath
 import net.lumue.filewalkerd.util.FileHelper.resolveMetaJsonPath
 import net.lumue.filewalkerd.util.FileHelper.resolveNfoPath
@@ -13,14 +14,19 @@ import org.apache.commons.io.FilenameUtils.getBaseName
 import org.apache.commons.io.FilenameUtils.getFullPath
 import org.slf4j.LoggerFactory
 import java.io.*
+import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import javax.xml.bind.JAXBException
 
 class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHandler {
+
     private val movieSerializer: NfoMovieSerializer = NfoMovieSerializer()
-    private val smartActorResolverMetadataUpdater: SmartActorResolverMetadataUpdater =
-        SmartActorResolverMetadataUpdater()
+
+    private val smartActorResolverMetadataUpdater: SmartActorResolverMetadataUpdater = SmartActorResolverMetadataUpdater()
+
+    private val smartTagResolverMetadataUpdater: SmartTagResolverMetadataUpdater = SmartTagResolverMetadataUpdater()
+
+    private val doNotTouchIfModifiedAfter = LocalDateTime.now().minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000
 
     override fun handleFile(file: File) {
         try {
@@ -28,9 +34,13 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
             if (isVideoFileExtension(file)) {
                 val nfoMetadataFileExists = nfoMetadataFileExists(filename)
                 if (!overwriteExistingNfo && nfoMetadataFileExists) {
-                    LOGGER.warn("nfo file already exists for$filename")
+                    LOGGER.info("nfo file already exists for$filename")
                     return
                 }
+//                if (nfoMetadataFileModifiedAfter(filename, doNotTouchIfModifiedAfter)) {
+//                    LOGGER.info("nfo $filename file was already modified since yesterday ")
+//                    return
+//                }
                 val movieBuilder: MovieBuilder = if (nfoMetadataFileExists) {
                     val nfoLocation = resolveNfoPath(file).toFile()
                     try {
@@ -56,10 +66,11 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
                         configureFromInfoJson(infoJsonLocation, movieBuilder)
                         configureFromMetaJson(metaJsonLocation, movieBuilder)
                     } catch (e: MetadataSourceAccessError) {
-                        LOGGER.warn("could not load additional metadata", e)
+                        LOGGER.warn("could not load additional metadata for $filename. error was: {}",e.localizedMessage)
                     }
                 }
                 smartActorResolverMetadataUpdater.configureNfoMovieBuilder(movieBuilder)
+                smartTagResolverMetadataUpdater.configureNfoMovieBuilder(movieBuilder)
                 writeNfoFile(movieBuilder.build(), filename)
             }
         } catch (e: Exception) {
@@ -119,8 +130,6 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
     }
 
     companion object {
-        private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         private val LOGGER = LoggerFactory.getLogger(NfoWriterFileHandler::class.java)
-        val ZONE_OFFSET = ZoneOffset.ofHours(2)
     }
 }

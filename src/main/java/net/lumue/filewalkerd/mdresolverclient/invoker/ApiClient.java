@@ -168,7 +168,7 @@ public class ApiClient {
         mapper.registerModule(new JavaTimeModule());
         JsonNullableModule jnm = new JsonNullableModule();
         mapper.registerModule(jnm);
-        URI baseURI = URI.create("http://vm-services-home:8090");
+        URI baseURI = URI.create("http://vm-services-home.data.lumue.net:8090");
         scheme = baseURI.getScheme();
         host = baseURI.getHost();
         port = baseURI.getPort();

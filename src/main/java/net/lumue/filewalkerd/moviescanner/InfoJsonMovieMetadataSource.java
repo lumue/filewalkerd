@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class InfoJsonMovieMetadataSource implements NfoMovieMetadataUpdater {
         DownloadMetadata downloadMetadata;
         downloadMetadata = readDownloadMetadata();
         try {
-            return new URL(downloadMetadata.getWebpageUrl());
+            return URI.create(downloadMetadata.getWebpageUrl()).toURL();
         } catch (MalformedURLException e) {
             throw new MetadataSourceAccessError("malformed source url", e);
         }

@@ -183,7 +183,7 @@ public class ResolveControllerApi {
 
         HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
-        String localVarPath = "/resolve";
+        String localVarPath = "resolve";
 
         List<Pair> localVarQueryParams = new ArrayList<>();
         localVarQueryParams.addAll(ApiClient.parameterToPairs("url", url));
