@@ -1,12 +1,14 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package net.lumue.filewalkerd.moviescanner
 
 import io.github.lumue.nfotools.Movie
 import io.github.lumue.nfotools.Movie.MovieBuilder
 import io.github.lumue.nfotools.NfoMovieSerializer
-import net.lumue.filewalkerd.scanner.FileHandler
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import net.lumue.filewalkerd.scanner.PathScanner.FileHandler
 import net.lumue.filewalkerd.util.FileHelper.isVideoFileExtension
 import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileExists
-import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileModifiedAfter
 import net.lumue.filewalkerd.util.FileHelper.resolveInfoJsonPath
 import net.lumue.filewalkerd.util.FileHelper.resolveMetaJsonPath
 import net.lumue.filewalkerd.util.FileHelper.resolveNfoPath
@@ -14,8 +16,6 @@ import org.apache.commons.io.FilenameUtils.getBaseName
 import org.apache.commons.io.FilenameUtils.getFullPath
 import org.slf4j.LoggerFactory
 import java.io.*
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.xml.bind.JAXBException
 
 class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHandler {
@@ -26,7 +26,6 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
 
     private val smartTagResolverMetadataUpdater: SmartTagResolverMetadataUpdater = SmartTagResolverMetadataUpdater()
 
-    private val doNotTouchIfModifiedAfter = LocalDateTime.now().minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000
 
     override fun handleFile(file: File) {
         try {

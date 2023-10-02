@@ -13,10 +13,10 @@ group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
 java{
     toolchain{
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 
@@ -118,7 +118,7 @@ dependencyManagement {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict ")
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
 }
 

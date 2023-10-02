@@ -2,7 +2,8 @@ package net.lumue.filewalkerd.moviescanner
 
 import io.github.lumue.nfotools.Movie
 import io.github.lumue.nfotools.NfoMovieSerializer
-import net.lumue.filewalkerd.scanner.FileHandler
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import net.lumue.filewalkerd.scanner.PathScanner.*
 import net.lumue.filewalkerd.util.FileHelper.getNfoFilename
 import net.lumue.filewalkerd.util.FileHelper.isVideoFileExtension
 import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileExists
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
 
+@ExperimentalCoroutinesApi
 class RenameToNormalizedFileNameFileHandler : FileHandler {
 
     private val movieSerializer = NfoMovieSerializer()

@@ -11,7 +11,7 @@ import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
-class ProcessFiles(
+internal class ProcessFiles(
     private val fileFilter: (file: File) -> Boolean = { true },
     private val handleFile: suspend (file: File) -> Any = {},
     private val context: CoroutineContext = Executors.newFixedThreadPool(10).asCoroutineDispatcher()
@@ -47,7 +47,7 @@ class ProcessFiles(
         return this.async(context) {
             for (file in producer) {
                 try {
-                    logger.debug("processing $file")
+                    logger.debug("processing {}",file)
                     handleFile(file)
                     logger.debug("$file processed")
                 } catch (t: Throwable) {

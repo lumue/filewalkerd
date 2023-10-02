@@ -5,7 +5,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import net.lumue.filewalkerd.moviescanner.FileHandlingTasks.*
+import net.lumue.filewalkerd.moviescanner.MovieScanners.*
 import org.junit.jupiter.api.Test
 
 /**
