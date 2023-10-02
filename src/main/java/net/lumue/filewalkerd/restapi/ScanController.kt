@@ -20,7 +20,7 @@ class ScanController(@Autowired val scanService: ScanService) {
         produces = ["application/json; charset=utf-8"]
     )
     fun handlePost(@RequestBody scanRequest: ScanRequest): ResponseEntity<String> {
-        return ResponseEntity.ok(scanService.startScan(scanRequest.path, scanRequest.fileHandlerId))
+        return ResponseEntity.ok(scanService.startScan(scanRequest.path, scanRequest.fileHandlerId).get())
     }
 
 

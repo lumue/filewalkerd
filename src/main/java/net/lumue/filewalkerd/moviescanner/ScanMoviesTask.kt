@@ -10,7 +10,7 @@ class ScanMoviesTask(
 
     fun execute() {
         runBlocking {
-            RenameMovieTask().execute(path)
+            FileHandlingTasks.RenameMovieTask().execute(path)
         }
     }
 

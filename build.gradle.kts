@@ -95,6 +95,7 @@ dependencies {
 
 //  logging
     implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation( "io.github.microutils:kotlin-logging-jvm:2.0.11")
 
 //   https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
     implementation("org.aspectj:aspectjweaver:1.9.1")

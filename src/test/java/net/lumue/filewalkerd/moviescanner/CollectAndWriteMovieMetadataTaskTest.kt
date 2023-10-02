@@ -5,6 +5,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import net.lumue.filewalkerd.moviescanner.FileHandlingTasks.*
 import org.junit.jupiter.api.Test
 
 /**
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.Test
 @ExperimentalCoroutinesApi
 class CollectAndWriteMovieMetadataTaskTest {
 
-    val locations = listOf("/mnt/truenas/media/porn/neu/2")
+    val locations = listOf("/mnt/truenas/media/porn/neu")
     //,"/mnt/truenas/media/porn/adult/2023")
 
     @Test
