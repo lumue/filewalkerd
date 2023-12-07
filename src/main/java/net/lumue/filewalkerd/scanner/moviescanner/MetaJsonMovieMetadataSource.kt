@@ -1,4 +1,4 @@
-package net.lumue.filewalkerd.moviescanner
+package net.lumue.filewalkerd.scanner.moviescanner
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -97,6 +97,7 @@ val File.isMetadataJson: Boolean
     }
 
 
+@Suppress("unused")
 data class LocationMetadata(
     @JsonProperty("url") val url: String,
     @JsonProperty("contentMetadata") val contentMetadata: ContentMetadata,

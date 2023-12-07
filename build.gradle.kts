@@ -84,6 +84,12 @@ dependencies {
     implementation("com.github.lumue:infojsontools:-SNAPSHOT")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
 
+    // https://mvnrepository.com/artifact/org.lz4/lz4-java
+    implementation("org.lz4:lz4-java:1.8.0")
+
+
+
+
     //mdresolver
     //implementation ("com.github.lumue:mdresolver-client-lib:0.1-RELEASE")
 //

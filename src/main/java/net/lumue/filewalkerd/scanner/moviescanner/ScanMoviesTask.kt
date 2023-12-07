@@ -1,8 +1,9 @@
-package net.lumue.filewalkerd.moviescanner
+package net.lumue.filewalkerd.scanner.moviescanner
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.runBlocking
+import net.lumue.filewalkerd.scanner.Scanners
 
 @ExperimentalCoroutinesApi
 class ScanMoviesTask(
@@ -11,7 +12,7 @@ class ScanMoviesTask(
 
     override fun run() {
         runBlocking {
-            MovieScanners.RenameMovieTask().execute(path)
+            Scanners.RenameMovieTask().execute(path)
         }
     }
 

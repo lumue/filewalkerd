@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package net.lumue.filewalkerd.moviescanner
+package net.lumue.filewalkerd.scanner.moviescanner
 
 import io.github.lumue.nfotools.Movie
 import io.github.lumue.nfotools.Movie.MovieBuilder

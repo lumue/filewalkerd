@@ -1,11 +1,11 @@
-package net.lumue.filewalkerd.moviescanner
+package net.lumue.filewalkerd.scanner.moviescanner
 
 
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import net.lumue.filewalkerd.moviescanner.MovieScanners.*
+import net.lumue.filewalkerd.scanner.Scanners.CollectAndWriteMovieMetadataTask
 import org.junit.jupiter.api.Test
 
 /**

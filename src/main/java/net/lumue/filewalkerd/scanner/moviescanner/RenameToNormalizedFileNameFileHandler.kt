@@ -1,9 +1,9 @@
-package net.lumue.filewalkerd.moviescanner
+package net.lumue.filewalkerd.scanner.moviescanner
 
 import io.github.lumue.nfotools.Movie
 import io.github.lumue.nfotools.NfoMovieSerializer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import net.lumue.filewalkerd.scanner.PathScanner.*
+import net.lumue.filewalkerd.scanner.PathScanner.FileHandler
 import net.lumue.filewalkerd.util.FileHelper.getNfoFilename
 import net.lumue.filewalkerd.util.FileHelper.isVideoFileExtension
 import net.lumue.filewalkerd.util.FileHelper.nfoMetadataFileExists

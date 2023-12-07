@@ -1,8 +1,11 @@
 package net.lumue.filewalkerd.util
 
+import net.jpountz.xxhash.XXHash32
+import net.jpountz.xxhash.XXHashFactory
 import org.apache.commons.io.FilenameUtils
 import org.slf4j.Logger
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -97,4 +100,27 @@ fun File.renameToOrWarn(newFile: File, logger: Logger) {
     logger.warn("renaming operation $this to $newFile failed")
 }
 
+fun buildXxHashForFile(file: File):Int {
+    val factory = XXHashFactory.fastestInstance()
+    val hash32: XXHash32 = factory.hash32()
+    val buffer = ByteArray(1048576 )
 
+    val fis = FileInputStream(file)
+    var bytesRead: Int
+    var hash=0
+    while (fis.read(buffer).also { bytesRead = it } != -1) {
+        hash = hash32.hash(buffer, 0, bytesRead, hash)
+    }
+    fis.close()
+    return hash
+}
+
+fun File.calculateHashForContent(hashFunction:(File)->Int):Int{
+    var hash=0
+    try {
+        hash= hashFunction(this)
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return hash
+}
