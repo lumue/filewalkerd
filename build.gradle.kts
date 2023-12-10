@@ -3,20 +3,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     java
-    id("org.springframework.boot") version "3.1.3"
-    id("io.spring.dependency-management") version "1.1.3"
-    kotlin("jvm") version "1.9.20-Beta2"
-    kotlin("plugin.spring") version "1.9.20-Beta2"
+    id("org.springframework.boot") version "3.2.0"
+    id("io.spring.dependency-management") version "1.1.4"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.spring") version "1.9.20"
 }
 
 group = "net.lumue.filewalkerd"
 version = "0.0.1-SNAPSHOT"
-java{
-    toolchain{
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 
@@ -25,7 +22,6 @@ application {
     mainClass.set("net.lumue.filewalkerd.FilewalkerdApplicationKt")
 }
 
-val springBootVersion: String get() = "3.1.3"
 val dockerHubPassword: String get() = "M9w8a+ET9u@+tA%"
 val dockerHubUser: String get() = "lumue"
 
@@ -37,9 +33,9 @@ repositories {
 extra["springBootAdminVersion"] = "2.3.1"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-quartz:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-quartz")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("de.codecentric:spring-boot-admin-starter-client")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
@@ -49,7 +45,7 @@ dependencies {
 
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools:$springBootVersion")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // json serializer
     implementation("com.google.guava:guava:32.1.2-jre")
@@ -124,7 +120,7 @@ dependencyManagement {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict ")
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 }
 
