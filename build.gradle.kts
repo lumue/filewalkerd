@@ -36,12 +36,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-rest")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.springframework.data:spring-data-rest-hal-explorer")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("de.codecentric:spring-boot-admin-starter-client")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.3.1")
+
 
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
