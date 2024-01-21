@@ -17,7 +17,7 @@ import java.util.*
 
 
 class MetaJsonMovieMetadataSource(val file: File) :
-    NfoMovieMetadataUpdater {
+    MetadataSource {
     val downloadPage: URL
         get() {
             val reader = LocationMetadataReader()
@@ -32,7 +32,7 @@ class MetaJsonMovieMetadataSource(val file: File) :
     private val LOGGER = LoggerFactory.getLogger(MetaJsonMovieMetadataSource::class.java)
 
 
-    override fun configureNfoMovieBuilder(movieBuilder: Movie.MovieBuilder): Movie.MovieBuilder {
+    override fun mergeInto(movieBuilder: Movie.MovieBuilder): Movie.MovieBuilder {
         val reader = LocationMetadataReader()
         return try {
             val locationMetadata = reader.read(FileInputStream(file))

@@ -5,9 +5,9 @@ import java.util.*
 
 class SmartTagResolverMetadataUpdater(
     private val knownTagSet: Set<String> = loadTags().toNormalizedForm()
-) : NfoMovieMetadataUpdater {
-    override fun configureNfoMovieBuilder(movieBuilder: Movie.MovieBuilder?): Movie.MovieBuilder {
-        val movie = movieBuilder!!.build()
+) : MetadataSource {
+    override fun mergeInto(movieBuilder: Movie.MovieBuilder): Movie.MovieBuilder {
+        val movie = movieBuilder.build()
         val newTags = mutableSetOf<String>()
         val movieTitle = if(movie.title!=null)movie.title.toNormalizedForm() else ""
         val movieOutline =if (movie.outline!=null)movie.outline.toNormalizedForm() else ""

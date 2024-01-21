@@ -1,56 +1,41 @@
-package net.lumue.filewalkerd.scanner.moviescanner;
+package net.lumue.filewalkerd.scanner.moviescanner
 
-import io.github.lumue.nfotools.Movie;
-import org.apache.commons.io.FilenameUtils;
+import io.github.lumue.nfotools.Movie.MovieBuilder
+import net.lumue.filewalkerd.util.FileHelper.readCreationTime
+import org.apache.commons.io.FilenameUtils
+import java.io.File
+import java.io.IOException
+import java.util.*
+import java.util.function.Consumer
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static net.lumue.filewalkerd.util.FileHelper.readCreationTime;
-
-public class MediaFileMovieMetadataSource implements NfoMovieMetadataUpdater {
-    private final File file;
-
-    public MediaFileMovieMetadataSource(File file) {
-        this.file = file;
-    }
-
-    @Override
-    public Movie.MovieBuilder configureNfoMovieBuilder(final Movie.MovieBuilder movieBuilder) {
-
+class MediaFileMovieMetadataSource(private val file: File) : MetadataSource {
+    override fun mergeInto(movieBuilder: MovieBuilder): MovieBuilder {
         try {
+            if (!file.exists()) return movieBuilder
 
-            if (!file.exists())
-                return movieBuilder;
-
-            LocalDateTime uploadDate = readCreationTime(file);
-            movieBuilder.withYear(Long.toString(uploadDate.getYear()));
-            movieBuilder.withAired(uploadDate);
-            if (file.getAbsolutePath().contains("adult")) {
-                movieBuilder.withGenre("Porn");
+            val uploadDate = readCreationTime(file)
+            movieBuilder.withYear(uploadDate.year.toString())
+            movieBuilder.withAired(uploadDate)
+            if (file.absolutePath.contains("adult")) {
+                movieBuilder.withGenre("Porn")
             }
-            extractTagsFromPath().forEach(movieBuilder::withTag);
-            movieBuilder.withTitle(FilenameUtils.getBaseName(file.getName()));
-            return movieBuilder;
-        } catch (IOException ioException) {
-            throw new MetadataSourceAccessError("error getting metadata from " + file, ioException);
+            extractTagsFromPath().forEach(Consumer { `val`: String? -> movieBuilder.withTag(`val`) })
+            movieBuilder.withTitle(FilenameUtils.getBaseName(file.name))
+            return movieBuilder
+        } catch (ioException: IOException) {
+            throw MetadataSourceAccessError("error getting metadata from $file", ioException)
         }
     }
 
-    private Collection<String> extractTagsFromPath() {
-        Collection<String> ret = new ArrayList<>();
-        final Path parent = file.toPath().getParent();
-        int namesCount = parent.getNameCount();
-        for (int i = namesCount - 1; i > 0; i--) {
-            final String name = parent.getName(i).toString();
-            if ("media".equals(name))
-                break;
-            ret.add(name.toLowerCase());
+    private fun extractTagsFromPath(): Collection<String> {
+        val ret: MutableCollection<String> = ArrayList()
+        val parent = file.toPath().parent
+        val namesCount = parent.nameCount
+        for (i in namesCount - 1 downTo 1) {
+            val name = parent.getName(i).toString()
+            if ("media" == name) break
+            ret.add(name.lowercase(Locale.getDefault()))
         }
-        return ret;
+        return ret
     }
 }

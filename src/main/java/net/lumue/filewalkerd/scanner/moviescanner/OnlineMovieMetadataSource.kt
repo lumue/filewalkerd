@@ -15,7 +15,8 @@ import java.time.Duration
 import java.time.temporal.ChronoUnit
 import java.util.function.Consumer
 
-class OnlineMovieMetadataSource(private val url: URL) : NfoMovieMetadataUpdater {
+class OnlineMovieMetadataSource(private val url: URL) :
+    MetadataSource {
     val apiClient: ApiClient
 
     init {
@@ -24,7 +25,7 @@ class OnlineMovieMetadataSource(private val url: URL) : NfoMovieMetadataUpdater 
             .setReadTimeout(Duration.of(300, ChronoUnit.SECONDS))
     }
 
-    override fun configureNfoMovieBuilder(movieBuilder: MovieBuilder): MovieBuilder {
+    override fun mergeInto(movieBuilder: MovieBuilder): MovieBuilder {
         val metadata = metadataFromURL
         if (metadata.actors != null) {
             metadata.actors!!

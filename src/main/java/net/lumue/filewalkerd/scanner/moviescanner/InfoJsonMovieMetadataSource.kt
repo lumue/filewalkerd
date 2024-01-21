@@ -1,100 +1,97 @@
-package net.lumue.filewalkerd.scanner.moviescanner;
+package net.lumue.filewalkerd.scanner.moviescanner
 
-import io.github.lumue.infojson.DownloadMetadata;
-import io.github.lumue.infojson.DownloadMetadataStreamParser;
-import io.github.lumue.nfotools.Movie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.lumue.infojson.DownloadMetadata
+import io.github.lumue.infojson.DownloadMetadataStreamParser
+import io.github.lumue.nfotools.Movie.MovieBuilder
+import net.lumue.filewalkerd.util.FileHelper.readCreationTime
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.net.MalformedURLException
+import java.net.URI
+import java.net.URL
+import java.time.LocalDateTime
+import java.util.*
+import java.util.function.Consumer
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
-import static net.lumue.filewalkerd.util.FileHelper.readCreationTime;
-
-public class InfoJsonMovieMetadataSource implements NfoMovieMetadataUpdater {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(InfoJsonMovieMetadataSource.class);
-
-    private final File file;
-
-    public InfoJsonMovieMetadataSource(File infoJsonFile) {
-        this.file = infoJsonFile;
-    }
-
-    public URL getDownloadPage() {
-        DownloadMetadata downloadMetadata;
-        downloadMetadata = readDownloadMetadata();
-        try {
-            return URI.create(downloadMetadata.getWebpageUrl()).toURL();
-        } catch (MalformedURLException e) {
-            throw new MetadataSourceAccessError("malformed source url", e);
+class InfoJsonMovieMetadataSource(private val file: File) : MetadataSource {
+    val downloadPage: URL
+        get() {
+            val downloadMetadata = readDownloadMetadata()
+            try {
+                return URI.create(downloadMetadata.webpageUrl).toURL()
+            } catch (e: MalformedURLException) {
+                throw MetadataSourceAccessError("malformed source url", e)
+            }
         }
-    }
 
-    @Override
-    public Movie.MovieBuilder configureNfoMovieBuilder(Movie.MovieBuilder movieBuilder) {
-        DownloadMetadata downloadMetadata;
-        downloadMetadata = readDownloadMetadata();
+    override fun mergeInto(movieBuilder: MovieBuilder): MovieBuilder {
+        val downloadMetadata = readDownloadMetadata()
 
-        final String uploadDateAsString = downloadMetadata.getUploadDate();
-        if (uploadDateAsString != null && !uploadDateAsString.isEmpty()) {
-            LocalDateTime uploadDate;
-            int year = Integer.parseInt(uploadDateAsString.substring(0, 4));
-            int month = Integer.parseInt(uploadDateAsString.substring(4, 6));
-            int day = Integer.parseInt(uploadDateAsString.substring(6, 8));
-            uploadDate = LocalDateTime.of(year, month, day, 0, 0, 0);
-            movieBuilder.withYear(Long.toString(uploadDate.getYear()));
-            movieBuilder.withAired(uploadDate);
+        val uploadDateAsString = downloadMetadata.uploadDate
+        if (uploadDateAsString != null && uploadDateAsString.isNotEmpty()) {
+            val uploadDate: LocalDateTime
+            val year = uploadDateAsString.substring(0, 4).toInt()
+            val month = uploadDateAsString.substring(4, 6).toInt()
+            val day = uploadDateAsString.substring(6, 8).toInt()
+            uploadDate = LocalDateTime.of(year, month, day, 0, 0, 0)
+            movieBuilder.withYear(uploadDate.year.toString())
+            movieBuilder.withAired(uploadDate)
         }
         try {
-            final LocalDateTime downloadDate = readCreationTime(file);
-            movieBuilder.withDateAdded(downloadDate);
-        } catch (IOException ioException) {
-            LOGGER.error("error getting creation time of " + file, ioException);
+            val downloadDate = readCreationTime(file)
+            movieBuilder.withDateAdded(downloadDate)
+        } catch (ioException: IOException) {
+            LOGGER.error("error getting creation time of $file", ioException)
         }
 
-        final String title = downloadMetadata.getTitle() != null ? downloadMetadata.getTitle() : "";
-        movieBuilder.withTitle(title);
-        movieBuilder.withTag(downloadMetadata.getExtractor());
-        movieBuilder.withVotes(String.valueOf(downloadMetadata.getLikeCount()));
-        final String description = downloadMetadata.getDescription() != null ? downloadMetadata.getDescription() : "";
-        movieBuilder.withTagline(description);
-        extractTagsFromInfojson(downloadMetadata).forEach(movieBuilder::withTag);
-        return movieBuilder;
+        val title = if (downloadMetadata.title != null) downloadMetadata.title else ""
+        movieBuilder.withTitle(title)
+        movieBuilder.withTag(downloadMetadata.extractor)
+        movieBuilder.withVotes(downloadMetadata.likeCount.toString())
+        val description = if (downloadMetadata.description != null) downloadMetadata.description else ""
+        movieBuilder.withTagline(description)
+        extractTagsFromInfojson(downloadMetadata).forEach(Consumer { `val`: String? -> movieBuilder.withTag(`val`) })
+        return movieBuilder
     }
 
-    private DownloadMetadata readDownloadMetadata() {
-        DownloadMetadata downloadMetadata;
+    private fun readDownloadMetadata(): DownloadMetadata {
+        val downloadMetadata: DownloadMetadata
         try {
-            InputStream inputStream = new FileInputStream(file);
-            DownloadMetadataStreamParser parser = new DownloadMetadataStreamParser();
-            downloadMetadata = parser.apply(inputStream);
-            inputStream.close();
-        } catch (IOException ioException) {
-            throw new MetadataSourceAccessError("error accessing " + file, ioException);
+            val inputStream: InputStream = FileInputStream(file)
+            val parser = DownloadMetadataStreamParser()
+            downloadMetadata = parser.apply(inputStream)
+            inputStream.close()
+        } catch (ioException: IOException) {
+            throw MetadataSourceAccessError("error accessing $file", ioException)
         }
-        return downloadMetadata;
+        return downloadMetadata
     }
 
-    private Set<String> extractTagsFromInfojson(DownloadMetadata downloadMetadata) {
-        Set<String> tagset = new HashSet<>();
-        Set<String> candidates = new HashSet<>();
-        Optional.ofNullable(downloadMetadata.getTags()).ifPresent(candidates::addAll);
-        Optional.ofNullable(downloadMetadata.getCategories()).ifPresent(candidates::addAll);
-        Optional.ofNullable(downloadMetadata.getUploader()).ifPresent(candidates::add);
+    private fun extractTagsFromInfojson(downloadMetadata: DownloadMetadata): Set<String> {
+        val tagset: MutableSet<String> = HashSet()
+        val candidates: MutableSet<String> = HashSet()
+        Optional.ofNullable(downloadMetadata.tags).ifPresent { c: List<String>? ->
+            candidates.addAll(
+                c!!
+            )
+        }
+        Optional.ofNullable(downloadMetadata.categories).ifPresent { c: List<String>? ->
+            candidates.addAll(
+                c!!
+            )
+        }
+        Optional.ofNullable(downloadMetadata.uploader).ifPresent { e: String -> candidates.add(e) }
         candidates.stream()
-                .filter(Objects::nonNull)
-                .forEach(tagset::add);
-        return tagset;
+            .filter { obj: String? -> Objects.nonNull(obj) }
+            .forEach { e: String -> tagset.add(e) }
+        return tagset
+    }
+
+    companion object {
+        private val LOGGER: Logger = LoggerFactory.getLogger(InfoJsonMovieMetadataSource::class.java)
     }
 }

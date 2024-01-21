@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory
 import java.io.*
 import javax.xml.bind.JAXBException
 
-class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHandler {
+class VideoFileHandler(private val overwriteExistingNfo: Boolean) : FileHandler {
 
     private val movieSerializer: NfoMovieSerializer = NfoMovieSerializer()
 
@@ -68,8 +68,8 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
                         LOGGER.warn("could not load additional metadata for $filename. error was: {}",e.localizedMessage)
                     }
                 }
-                smartActorResolverMetadataUpdater.configureNfoMovieBuilder(movieBuilder)
-                smartTagResolverMetadataUpdater.configureNfoMovieBuilder(movieBuilder)
+                smartActorResolverMetadataUpdater.mergeInto(movieBuilder)
+                smartTagResolverMetadataUpdater.mergeInto(movieBuilder)
                 writeNfoFile(movieBuilder.build(), filename)
             }
         } catch (e: Exception) {
@@ -100,7 +100,7 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
             return
         }
         val mediaFileMovieMetadataSource = MediaFileMovieMetadataSource(file)
-        mediaFileMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)
+        mediaFileMovieMetadataSource.mergeInto(movieBuilder)
     }
 
     private fun configureFromInfoJson(infoJsonPath: File, movieBuilder: MovieBuilder) {
@@ -110,10 +110,10 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
             return
         }
         val infoJsonMovieMetadataSource = InfoJsonMovieMetadataSource(infoJsonPath)
-        infoJsonMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)
+        infoJsonMovieMetadataSource.mergeInto(movieBuilder)
         val origin = infoJsonMovieMetadataSource.downloadPage
         val onlineMovieMetadataSource = OnlineMovieMetadataSource(origin)
-        onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)
+        onlineMovieMetadataSource.mergeInto(movieBuilder)
     }
 
     private fun configureFromMetaJson(metaJsonPath: File, movieBuilder: MovieBuilder) {
@@ -122,13 +122,13 @@ class NfoWriterFileHandler(private val overwriteExistingNfo: Boolean) : FileHand
             return
         }
         val metaJsonMovieMetadataSource = MetaJsonMovieMetadataSource(metaJsonPath)
-        metaJsonMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)
+        metaJsonMovieMetadataSource.mergeInto(movieBuilder)
         val origin = metaJsonMovieMetadataSource.downloadPage
         val onlineMovieMetadataSource = OnlineMovieMetadataSource(origin)
-        onlineMovieMetadataSource.configureNfoMovieBuilder(movieBuilder)
+        onlineMovieMetadataSource.mergeInto(movieBuilder)
     }
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(NfoWriterFileHandler::class.java)
+        private val LOGGER = LoggerFactory.getLogger(VideoFileHandler::class.java)
     }
 }

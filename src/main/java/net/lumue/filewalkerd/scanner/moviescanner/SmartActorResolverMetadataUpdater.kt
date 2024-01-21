@@ -5,9 +5,9 @@ import java.util.*
 
 class SmartActorResolverMetadataUpdater(
     private val knownActorSet: Set<String> = loadActors()
-) : NfoMovieMetadataUpdater {
-    override fun configureNfoMovieBuilder(movieBuilder: Movie.MovieBuilder?): Movie.MovieBuilder {
-        val movie = movieBuilder!!.build()
+) : MetadataSource {
+    override fun mergeInto(movieBuilder: Movie.MovieBuilder): Movie.MovieBuilder {
+        val movie = movieBuilder.build()
         val possibleActors = mutableSetOf<String>()
         val movieTags = movie.tags().toNormalizedForm()
         val movieTitle = movie.title.toNormalizedForm()
