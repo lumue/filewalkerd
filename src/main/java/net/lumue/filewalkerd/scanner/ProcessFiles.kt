@@ -2,19 +2,19 @@ package net.lumue.filewalkerd.scanner
 
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 internal class ProcessFiles(
     private val fileFilter: (file: File) -> Boolean = { true },
     private val handleFile: suspend (file: File) -> Any = {},
-    private val context: CoroutineContext = Executors.newFixedThreadPool(10).asCoroutineDispatcher()
+    private val context: CoroutineContext = Default
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(ProcessFiles::class.java)
@@ -26,8 +26,9 @@ internal class ProcessFiles(
     ) {
 
         val rootPath = File(path)
+
         if (!rootPath.exists() || !rootPath.isDirectory)
-            return
+            throw IllegalArgumentException("$path is not a valid directory")
 
         runBlocking {
             val producer = launchFileListProducer(rootPath)
@@ -49,9 +50,9 @@ internal class ProcessFiles(
                 try {
                     logger.debug("processing {}",file)
                     handleFile(file)
-                    logger.debug("$file processed")
+                    logger.debug("{} processed", file)
                 } catch (t: Throwable) {
-                    logger.error("error processing $file: ${t.message}", t)
+                    logger.error(/* p0 = */ "error processing $file: ${t.message}", /* p1 = */ t)
                 }
             }
         }
@@ -64,7 +65,7 @@ internal class ProcessFiles(
             rootPath.walkBottomUp()
                 .filter { fileFilter(it) }
                 .forEach {
-                    logger.debug("selected $it for processing ")
+                    logger.debug("selected {} for processing ", it)
                     send(it)
                 }
             close()
