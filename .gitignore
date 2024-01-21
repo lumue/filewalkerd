@@ -36,3 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 /out.html
+/.jpb/jpb-settings.xml
+/kodi.log
